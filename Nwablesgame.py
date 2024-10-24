@@ -44,13 +44,13 @@ pygame.display.flip()
 
 # add instruction
 
-'''pygame.time.delay(900)
+pygame.time.delay(900)
 displaysurface.blit(instruction,(0,-55))
 pygame.display.flip()
 
 #back to white background
 
-pygame.time.delay(8000)'''
+pygame.time.delay(8000)
 pygame.Surface.fill(displaysurface,"white")
 pygame.display.flip()
 
@@ -62,27 +62,31 @@ paddingabove = 30
 paddingbelow = 60 
 
 #create an arena to play in
+def createarena():
+    arena = pygame.draw.rect(displaysurface,"white",pygame.Rect(paddingleft,paddingabove,(fullscreen[0]-paddingright),(fullscreen[1]-paddingbelow)))
+    arena = arena.inflate(borderwidth * 2, borderwidth * 2)
+    pygame.draw.rect(displaysurface, "black", arena, borderwidth)
 
-arena = pygame.draw.rect(displaysurface,"black",pygame.Rect(paddingleft,paddingabove,(fullscreen[0]-paddingright),(fullscreen[1]-paddingbelow)),borderwidth)
-outline = arena.inflate(borderwidth * 2, borderwidth * 2)
-pygame.draw.rect(displaysurface, "white", outline, borderwidth)
+arena = createarena()
+
+arenawidth = fullscreen[0]-paddingright-paddingleft
+arenaheight = fullscreen[1]-paddingbelow-paddingabove
 
 
 pygame.display.flip() 
-pygame.time.delay(3000)
 
 #starts here, ends here
 # parameters for mousey to stay in 
 
 parameters = {
-    'horizontal':((paddingleft + borderwidth),(paddingleft + borderwidth + arena.width)), 
-    'vertical':((paddingabove+borderwidth),(paddingabove + borderwidth + arena.height))
+    'horizontal':((paddingleft + borderwidth),(paddingleft + borderwidth + arenawidth)), 
+    'vertical':((paddingabove+borderwidth),(paddingabove + borderwidth + arenaheight))
     
 }
 
 cheeseparameters = {
-    'horizontal':((paddingleft + borderwidth + cheese.get_width() + 5),(paddingleft + borderwidth + arena.width - cheese.get_width() - 5)), 
-    'vertical':((paddingabove+borderwidth + cheese.get_height() + 5),(paddingabove + borderwidth + arena.height - cheese.get_height() - 5))
+    'horizontal':((paddingleft + borderwidth + cheese.get_width() + 5),(paddingleft + borderwidth + arenawidth - cheese.get_width() - 5)), 
+    'vertical':((paddingabove+borderwidth + cheese.get_height() + 5),(paddingabove + borderwidth + arenaheight - cheese.get_height() - 5))
     }
 
 
@@ -90,8 +94,10 @@ cheeseparameters = {
 
 def elusivecheese():
     pygame.time.delay(80)
-    displaysurface.fill("white")
-    arena = pygame.draw.rect(displaysurface,"black",pygame.Rect(paddingleft,paddingabove,(fullscreen[0]-paddingright),(fullscreen[1]-paddingbelow)),borderwidth)
+    displaysurface.fill(pygame.Color('#90D5FF'))
+    
+    createarena()
+    
     pygame.display.flip()
 
     global a,b
@@ -152,8 +158,11 @@ while running:
     y = max(parameters['vertical'][0], min(y,parameters['vertical'][1] - img.get_height()))
 
 
-    displaysurface.fill("white")
-    arena = pygame.draw.rect(displaysurface,"black",pygame.Rect(paddingleft,paddingabove,(fullscreen[0]-paddingright),(fullscreen[1]-paddingbelow)),borderwidth)
+    displaysurface.fill(pygame.Color('#ADD8E6'))
+    arena = pygame.draw.rect(displaysurface,"white",pygame.Rect(paddingleft,paddingabove,(fullscreen[0]-paddingright),(fullscreen[1]-paddingbelow)))
+    arena = arena.inflate(borderwidth * 2, borderwidth * 2)
+    pygame.draw.rect(displaysurface, "black", arena, borderwidth)
+
     mymouse = displaysurface.blit(img,(x,y))
     
     mycheese = displaysurface.blit(cheese,(a,b))
