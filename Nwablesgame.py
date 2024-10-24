@@ -8,7 +8,7 @@ fullscreen = (1366,710)
 displaysurface = pygame.display.set_mode(fullscreen,pygame.RESIZABLE)
 color = (222,222,0)
 pygame.display.set_caption('NwablesGame')
-Icon = pygame.image.load('share_card.png')
+Icon = pygame.image.load('mousedead.png')
 pygame.display.set_icon(Icon) 
 
 #what is mousey doing
@@ -27,40 +27,53 @@ mouseup = fetchimage('Mouseup.png',0.25)
 mousedown = fetchimage('Mousedown.png',0.25)
 mouseleft = fetchimage('Mouseleft.png',0.25)
 mouseright = fetchimage('Mouseright.png',0.25)
-mousedead = fetchimage('Mousedead.png',0.25)
+mousedead = fetchimage('Mousedead.png',0.25) 
 mousestop = fetchimage('Mousestop.png',0.25)
-cheese = fetchimage('cheese.png',0.15)
-instruction = fetchimage('feedthemouse.png',0.7)
+cheese = fetchimage('peanutbutter.png',0.35)
+instruction = fetchimage('feedthemouse.png',0.75)
+catup = fetchimage('catup.png',0.25)
+catdown = fetchimage('catdown.png',0.25)
+catright = fetchimage('catright.png',0.25)
+catleft = fetchimage('catleft.png',0.25)
 
 # white background 
 
-pygame.time.delay(1500)
+pygame.time.delay(1000)
 pygame.Surface.fill(displaysurface,"white")
 pygame.display.flip()
 
 # add instruction
 
-'''pygame.time.delay(1500)
-displaysurface.blit(instruction,(0,0))
+'''pygame.time.delay(900)
+displaysurface.blit(instruction,(0,-55))
 pygame.display.flip()
 
 #back to white background
 
-pygame.time.delay(1500)
+pygame.time.delay(8000)'''
 pygame.Surface.fill(displaysurface,"white")
-pygame.display.flip()'''
+pygame.display.flip()
 
 #make a subscreen
 borderwidth = 3
-paddingleft = 30
-paddingright = 300
-paddingabove = 30
-paddingbelow = 60
+paddingleft = 30  
+paddingright = 300 
+paddingabove = 30 
+paddingbelow = 60 
+
+#create an arena to play in
 
 arena = pygame.draw.rect(displaysurface,"black",pygame.Rect(paddingleft,paddingabove,(fullscreen[0]-paddingright),(fullscreen[1]-paddingbelow)),borderwidth)
+outline = arena.inflate(borderwidth * 2, borderwidth * 2)
+pygame.draw.rect(displaysurface, "white", outline, borderwidth)
+
+
 pygame.display.flip() 
+pygame.time.delay(3000)
 
 #starts here, ends here
+# parameters for mousey to stay in 
+
 parameters = {
     'horizontal':((paddingleft + borderwidth),(paddingleft + borderwidth + arena.width)), 
     'vertical':((paddingabove+borderwidth),(paddingabove + borderwidth + arena.height))
