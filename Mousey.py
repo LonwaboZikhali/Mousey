@@ -1,15 +1,15 @@
 import pygame
-pygame.init()
 import random
+import sys
+pygame.init()
 
+score = 0
 
 #background
 fullscreen = (1366,710)
 displaysurface = pygame.display.set_mode(fullscreen,pygame.RESIZABLE)
 color = (222,222,0)
 pygame.display.set_caption('NwablesGame')
-Icon = pygame.image.load('mousedead.png')
-pygame.display.set_icon(Icon) 
 
 #what is mousey doing
 # 1. load the image then remove its background
@@ -23,18 +23,21 @@ def fetchimage(imagename,size):
     
     return imageresized
 
-mouseup = fetchimage('Mouseup.png',0.25)
-mousedown = fetchimage('Mousedown.png',0.25)
-mouseleft = fetchimage('Mouseleft.png',0.25)
-mouseright = fetchimage('Mouseright.png',0.25)
-mousedead = fetchimage('Mousedead.png',0.25) 
-mousestop = fetchimage('Mousestop.png',0.25)
-cheese = fetchimage('peanutbutter.png',0.35)
-instruction = fetchimage('feedthemouse.png',0.75)
-catup = fetchimage('catup.png',0.25)
-catdown = fetchimage('catdown.png',0.25)
-catright = fetchimage('catright.png',0.25)
-catleft = fetchimage('catleft.png',0.25)
+mouseup = fetchimage('assets/Mouseup.png',0.25)
+mousedown = fetchimage('assets/Mousedown.png',0.25)
+mouseleft = fetchimage('assets/Mouseleft.png',0.25)
+mouseright = fetchimage('assets/Mouseright.png',0.25)
+mousedead = fetchimage('assets/Mousedead.png',0.25) 
+mousestop = fetchimage('assets/Mousestop.png',0.25)
+cheese = fetchimage('assets/peanutbutter.png',0.35)
+instruction = fetchimage('assets/feedthemouse.png',0.75)
+catup = fetchimage('assets/catup.png',0.25)
+catdown = fetchimage('assets/catdown.png',0.25)
+catright = fetchimage('assets/catright.png',0.25)
+catleft = fetchimage('assets/catleft.png',0.25)
+
+Icon = fetchimage('assets/Mousestop.png',1)
+pygame.display.set_icon(Icon)
 
 # white background 
 
@@ -63,14 +66,70 @@ paddingbelow = 60
 
 #create an arena to play in
 def createarena():
+    
     arena = pygame.draw.rect(displaysurface,"white",pygame.Rect(paddingleft,paddingabove,(fullscreen[0]-paddingright),(fullscreen[1]-paddingbelow)))
-    arena = arena.inflate(borderwidth * 2, borderwidth * 2)
+    arena = arena.inflate(borderwidth*2, borderwidth*2)
     pygame.draw.rect(displaysurface, "black", arena, borderwidth)
 
-arena = createarena()
+#arena parameters
 
 arenawidth = fullscreen[0]-paddingright-paddingleft
 arenaheight = fullscreen[1]-paddingbelow-paddingabove
+
+#rightspace parameters
+
+rsleft = paddingleft + arenawidth + 45
+rsright = fullscreen[0]
+rstop = paddingabove
+rsbottom = fullscreen[1]
+rsmiddle = (fullscreen[0] - paddingright) + (paddingright/2)
+
+#create points block
+
+def createpointsystem():
+    gap = 10
+    
+    def scores(text,texttop):
+    #set font
+        fontsize = 50
+        sansserif = pygame.font.SysFont('Sans-serif',fontsize)
+
+        scoretext = (sansserif.render(text,True,"black"))
+        scorewhere = scoretext.get_rect(center = (rsmiddle,(texttop + fontsize/2)))
+        displaysurface.blit(scoretext,scorewhere)
+
+    def scoreblocks(howfardown,whichscore):
+        fontsize = 100
+        sansserif = pygame.font.SysFont('Sans-serif',fontsize)
+
+        blockwidth = paddingright-60
+        blockheight = 210
+
+        theblock = pygame.draw.rect(displaysurface,"gray",pygame.Rect(rsleft,(rstop + howfardown),blockwidth,blockheight))
+        theblock = theblock.inflate(borderwidth*2,borderwidth*2)
+        pygame.draw.rect(displaysurface, "white", theblock,borderwidth)
+        blocktext = (sansserif.render(whichscore,True,"black"))
+        blocktextcenter = blocktext.get_rect(center = theblock.center)
+        displaysurface.blit(blocktext,blocktextcenter)
+
+
+    scores('MYSCORE',rstop)
+    scoreblocks((rstop + 50 + gap),scoreboard)
+    scores('HIGHSCORE', (rstop + gap + gap + gap + 50 + gap + 210 + gap + gap))
+    scoreblocks((gap + rstop + 50 + gap + 210 + gap + 50 + gap + gap + gap + gap),scoreboard2)
+
+
+scoreboard = str(score)
+scoreboard2 = str((score)) #score for now but the maximum!!!!!!!!
+
+def addtoscore():
+
+    global score
+    global scoreboard
+
+    score += 5
+    scoreboard = str(score)
+    scoreboard2 = str(score)
 
 
 pygame.display.flip() 
@@ -97,14 +156,15 @@ def elusivecheese():
     displaysurface.fill(pygame.Color('#90D5FF'))
     
     createarena()
-    
+    createpointsystem()
+
     pygame.display.flip()
 
     global a,b
 
     a = random.randrange(cheeseparameters['horizontal'][0],cheeseparameters['horizontal'][1])
     b = random.randrange(cheeseparameters['vertical'][0],cheeseparameters['vertical'][1])
-
+    
 
 
 a,b = (cheeseparameters['horizontal'][1] - cheese.get_width()),(paddingabove + 10)
@@ -112,7 +172,7 @@ x,y = 30,30
 
 move_x,move_y = 0,0
 img = mousestop
-speed = 0.7
+speed = 3
 
 running = True
 while running:
@@ -159,9 +219,8 @@ while running:
 
 
     displaysurface.fill(pygame.Color('#ADD8E6'))
-    arena = pygame.draw.rect(displaysurface,"white",pygame.Rect(paddingleft,paddingabove,(fullscreen[0]-paddingright),(fullscreen[1]-paddingbelow)))
-    arena = arena.inflate(borderwidth * 2, borderwidth * 2)
-    pygame.draw.rect(displaysurface, "black", arena, borderwidth)
+    arena = createarena()
+    pointsblock = createpointsystem()
 
     mymouse = displaysurface.blit(img,(x,y))
     
@@ -174,10 +233,13 @@ while running:
     cheeserect = pygame.Rect(a,b,cheese.get_width(),cheese.get_height())
 
     def collision():
+        
         return mouserect.colliderect(cheeserect)
 
     if collision():
         elusivecheese()
+        addtoscore()
         
-        #also add a points increase function
+        #also add a high score remembering function
+        #maybe add some music?
 pygame.quit()
