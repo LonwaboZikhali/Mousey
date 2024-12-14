@@ -32,10 +32,7 @@ mousedead = fetchimage('assets/Mousedead.png',0.25)
 mousestop = fetchimage('assets/Mousestop.png',0.25)
 cheese = fetchimage('assets/peanutbutter.png',0.35)
 instruction = fetchimage('assets/feedthemouse.png',0.75)
-catup = fetchimage('assets/catup.png',0.25)
-catdown = fetchimage('assets/catdown.png',0.25)
-catright = fetchimage('assets/catright.png',0.25)
-catleft = fetchimage('assets/catleft.png',0.25)
+thecat = fetchimage('assets/thecat.png',0.25)
 
 Icon = fetchimage('assets/Mousestop.png',1)
 pygame.display.set_icon(Icon)
@@ -49,7 +46,7 @@ pygame.display.flip()
 
 # onto game
 
-pygame.time.delay(8000)
+pygame.time.delay(1000)
 pygame.Surface.fill(displaysurface,"white")
 pygame.display.flip()
 
@@ -141,31 +138,13 @@ parameters = {
 
 cheeseparameters = {
     'horizontal':((paddingleft + borderwidth + cheese.get_width() + 5),(paddingleft + borderwidth + arenawidth - cheese.get_width() - 5)), 
-    'vertical':((paddingabove+borderwidth + cheese.get_height() + 5),(paddingabove + borderwidth + arenaheight - cheese.get_height() - 5))
+    'vertical':((paddingabove + borderwidth + cheese.get_height() + 5),(paddingabove + borderwidth + arenaheight - cheese.get_height() - 5))
     }
-
-#cheese changes position
-
-
-def elusivecheese():
-    pygame.time.delay(80)
-    displaysurface.fill(pygame.Color('#90D5FF'))
-    
-    createarena()
-    createpointsystem()
-
-    pygame.display.flip()
-
-    a = random.randrange(cheeseparameters['horizontal'][0],cheeseparameters['horizontal'][1])
-    b = random.randrange(cheeseparameters['vertical'][0],cheeseparameters['vertical'][1])
-    
-    return a,b
 
 def main():
 
-    a,b = (cheeseparameters['horizontal'][1] - cheese.get_width()),(paddingabove + 10)
-
     x,y = 30,30
+    a,b = (cheeseparameters['horizontal'][1] - cheese.get_width()),(paddingabove + 10)
 
     move_x,move_y = 0,0
     img = mousestop
@@ -210,7 +189,7 @@ def main():
         y += move_y
 
     # there is conflict between the parameters and where
-    #you are saying you want to be, and the parameters win (keeping within the parameters)
+    # you are saying you want to be, and the parameters win (keeping within the parameters)
 
         x = max(parameters['horizontal'][0], min(x,parameters['horizontal'][1] - img.get_width()))
         y = max(parameters['vertical'][0], min(y,parameters['vertical'][1] - img.get_height()))
@@ -226,16 +205,38 @@ def main():
         pygame.display.flip()
 
         #Mouse eats cheese
+        #cheese changes position
+        def the_cat_follows():
+            pass
 
-        mouserect = pygame.Rect(x,y,img.get_width(),img.get_height())
-        cheeserect = pygame.Rect(a,b,cheese.get_width(),cheese.get_height())
+
+        def elusivecheese():
+            """cheese moves to a new random location"""
+            pygame.time.delay(80)
+            # displaysurface.fill(pygame.Color('#90D5FF'))
+            
+            # createarena()
+            # createpointsystem()
+
+            pygame.display.flip()
+
+            global a,b
+
+            a = random.randrange(cheeseparameters['horizontal'][0],cheeseparameters['horizontal'][1])
+            b = random.randrange(cheeseparameters['vertical'][0],cheeseparameters['vertical'][1])      
+
+            return a,b      
 
         def collision():
+            """returns a boolean that tells us whether the cheese and mouse are colliding."""
+
+            mouserect = pygame.Rect(x,y,img.get_width(),img.get_height())
+            cheeserect = pygame.Rect(a,b,cheese.get_width(),cheese.get_height())
             
             return mouserect.colliderect(cheeserect)
 
         if collision():
-            elusivecheese()
+            a,b = elusivecheese()
             addtoscore()
             
             #also add a high score remembering function
