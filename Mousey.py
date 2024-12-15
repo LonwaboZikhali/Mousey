@@ -32,7 +32,7 @@ mousedead = fetchimage('assets/Mousedead.png',0.25)
 mousestop = fetchimage('assets/Mousestop.png',0.25)
 cheese = fetchimage('assets/peanutbutter.png',0.35)
 instruction = fetchimage('assets/feedthemouse.png',0.75)
-thecat = fetchimage('assets/thecat.png',0.25)
+thecat = fetchimage('assets/thecat.png',0.15)
 
 Icon = fetchimage('assets/Mousestop.png',1)
 pygame.display.set_icon(Icon)
@@ -85,9 +85,6 @@ def createpointsystem():
 
     gap = 10
     
-    scoreboard = str(score)
-    scoreboard2 = str((score)) #score for now but the maximum!!!!!!!!
-
     def scores(text,texttop):
     #set font
         fontsize = 50
@@ -111,11 +108,36 @@ def createpointsystem():
         blocktextcenter = blocktext.get_rect(center = theblock.center)
         displaysurface.blit(blocktext,blocktextcenter)
 
+    def scoring_system():
+        
+        global score
+
+        with open("assets/highscore.txt","r",errors="ignore") as file:
+            highscore = file.read()
+
+        if score > int(highscore)  or highscore == '':
+            with open("assets/highscore.txt","w",errors="ignore") as file:
+                file.write(str(score))
+
+        if score > int(highscore)  or highscore == '':
+            with open("assets/highscore.txt","w",errors="ignore") as file:
+                file.write(str(score))
+        else:
+            pass
+
+        return highscore
+
+    scoring_system()
+
+    scoreboard = str(score)
+    scoreboard2 = str((scoring_system())) #score for now but the maximum!!!!!!!!
+
+
 
     scores('MYSCORE',rstop)
     scoreblocks((rstop + 50 + gap),scoreboard)
-    scores('HIGHSCORE', (rstop + gap + gap + gap + 50 + gap + 210 + gap + gap))
-    scoreblocks((gap + rstop + 50 + gap + 210 + gap + 50 + gap + gap + gap + gap),scoreboard2)
+    scores('HIGHSCORE', (rstop + 260 + 6*gap))
+    scoreblocks(( rstop + 310 + 7*gap),scoreboard2)
 
 def addtoscore():
     
@@ -145,10 +167,11 @@ def main():
 
     x,y = 30,30
     a,b = (cheeseparameters['horizontal'][1] - cheese.get_width()),(paddingabove + 10)
+    t,v = 30,((parameters['vertical'][1]) - thecat.get_height())
 
     move_x,move_y = 0,0
     img = mousestop
-    speed = 3
+    xyspeed = 3
 
 
     running = True
@@ -164,19 +187,19 @@ def main():
 
         if keys[pygame.K_UP]:
             img = mouseup
-            move_y = -speed
+            move_y = -xyspeed
 
         elif keys[pygame.K_DOWN]:
             img = mousedown
-            move_y = +speed
+            move_y = +xyspeed
 
         elif keys[pygame.K_RIGHT]:
             img = mouseright
-            move_x = +speed
+            move_x = +xyspeed
 
         elif keys[pygame.K_LEFT]:
             img = mouseleft
-            move_x = -speed
+            move_x = -xyspeed
 
         else:
             img = mousestop
@@ -187,31 +210,56 @@ def main():
 
         x += move_x
         y += move_y
+         
 
     # there is conflict between the parameters and where
     # you are saying you want to be, and the parameters win (keeping within the parameters)
 
         x = max(parameters['horizontal'][0], min(x,parameters['horizontal'][1] - img.get_width()))
         y = max(parameters['vertical'][0], min(y,parameters['vertical'][1] - img.get_height()))
-
+ 
 
         displaysurface.fill(pygame.Color('#ADD8E6'))
         arena = createarena()
         pointsblock = createpointsystem()
 
         mymouse = displaysurface.blit(img,(x,y))
-        
+        mycat = displaysurface.blit(thecat,(t,v))
         mycheese = displaysurface.blit(cheese,(a,b))
+
         pygame.display.flip()
+
 
         #Mouse eats cheese
         #cheese changes position
-        def the_cat_follows():
-            pass
+        
+        def the_cat_follows(x,y,t,v): 
 
+            tvspeed = 0.7
+
+            distance_between_x = x - t
+            distance_between_y = y - v
+
+            if distance_between_x > 0:
+                t += tvspeed
+            elif distance_between_x < 0:
+                t -= tvspeed
+            else:
+                pass
+            if distance_between_y > 0:
+                v += tvspeed
+            elif distance_between_y < 0:
+                v -= tvspeed
+            else:
+                pass
+
+            return t,v
+
+        t,v = the_cat_follows(x,y,t,v)
 
         def elusivecheese():
             """cheese moves to a new random location"""
+
             pygame.time.delay(80)
             # displaysurface.fill(pygame.Color('#90D5FF'))
             
@@ -227,7 +275,7 @@ def main():
 
             return a,b      
 
-        def collision():
+        def mousecheesecollision():
             """returns a boolean that tells us whether the cheese and mouse are colliding."""
 
             mouserect = pygame.Rect(x,y,img.get_width(),img.get_height())
@@ -235,11 +283,24 @@ def main():
             
             return mouserect.colliderect(cheeserect)
 
-        if collision():
+        def mousecatcollision():
+            catrect = pygame.Rect(t,v,thecat.get_width(),thecat.get_height())
+            mouserect = pygame.Rect(x,y,img.get_width(),img.get_height())
+
+            return catrect.colliderect(mouserect)
+
+        if mousecheesecollision():
             a,b = elusivecheese()
             addtoscore()
-            
-            #also add a high score remembering function
+        else:
+            pass
+    
+        if mousecatcollision():
+            running = False
+
+        def game_over():
+            pass
+
             #maybe add some music?
     pygame.quit()
 
