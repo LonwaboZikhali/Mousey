@@ -3,6 +3,7 @@ import random
 import sys
 
 pygame.init()
+pygame.mixer.init()
 
 #background
 
@@ -33,6 +34,7 @@ mousestop = fetchimage('assets/Mousestop.png',0.25)
 cheese = fetchimage('assets/peanutbutter.png',0.35)
 instruction = fetchimage('assets/feedthemouse.png',0.75)
 thecat = fetchimage('assets/thecat.png',0.15)
+gameover = fetchimage('assets/gameover.png',1)
 
 Icon = fetchimage('assets/Mousestop.png',1)
 pygame.display.set_icon(Icon)
@@ -163,6 +165,12 @@ cheeseparameters = {
     'vertical':((paddingabove + borderwidth + cheese.get_height() + 5),(paddingabove + borderwidth + arenaheight - cheese.get_height() - 5))
     }
 
+def startmenu():
+    pygame.Surface.fill(displaysurface,"white")
+    pygame.draw.rect(displaysurface,"pink",pygame.Rect(0,0,fullscreen[0],fullscreen[1]))
+    pygame.display.flip()
+    pygame.time.delay(8000)
+
 def main():
 
     x,y = 30,30
@@ -173,9 +181,16 @@ def main():
     img = mousestop
     xyspeed = 3
 
+    # music
+    pygame.mixer.music.load("assets/A Desktop Homepage Theme.mp3")
+    pygame.mixer.music.play()
+    pygame.mixer.music.set_volume(0.07)
+    bing = pygame.mixer.Sound("assets/BING.mp3")
+    wrong = pygame.mixer.Sound("assets/wrong.mp3")
 
     running = True
     while running:
+
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -290,19 +305,22 @@ def main():
             return catrect.colliderect(mouserect)
 
         if mousecheesecollision():
+            bing.play()
             a,b = elusivecheese()
             addtoscore()
         else:
             pass
     
         if mousecatcollision():
+            wrong.play()
+            displaysurface.blit(gameover,(fullscreen))
+            pygame.display.flip()
+            pygame.time.delay(1000)
             running = False
 
-        def game_over():
-            pass
-
-            #maybe add some music?
     pygame.quit()
 
 if __name__ == "__main__":
+
+    startmenu()
     main()
