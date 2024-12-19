@@ -8,7 +8,7 @@ https://www.livescience.com/do-mice-really-like-cheese
 
 An extract from the article:
 
-"Instead, what house mice really seem to love is peanut butter. "They have a good sense of smell, and it has a pretty strong odor," Phifer-Rixey said. Plus, peanut butter has plenty of protein and fat, which mice find attractive, she added."
+"Instead, what house mice really seem to love is peanut butter. 'They have a good sense of smell, and it has a pretty strong odor,' Phifer-Rixey said. Plus, peanut butter has plenty of protein and fat, which mice find attractive, she added."
 
 I am a budding Software Engineer and decided to try out building a game, and this was the result.
 
