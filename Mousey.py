@@ -34,7 +34,7 @@ mousestop = fetchimage('assets/Mousestop.png',0.25)
 cheese = fetchimage('assets/peanutbutter.png',0.35)
 instruction = fetchimage('assets/feedthemouse.png',0.75)
 thecat = fetchimage('assets/thecat.png',0.15)
-gameover = fetchimage('assets/gameover.png',1)
+gameover = fetchimage('assets/gameover.png',0.72)
 
 Icon = fetchimage('assets/Mousestop.png',1)
 pygame.display.set_icon(Icon)
@@ -46,7 +46,7 @@ pygame.Surface.fill(displaysurface,"white")
 displaysurface.blit(instruction,(0,-55))
 pygame.display.flip()
 
-# onto game
+# onto the game
 
 pygame.time.delay(1000)
 pygame.Surface.fill(displaysurface,"white")
@@ -71,7 +71,7 @@ def createarena():
 arenawidth = fullscreen[0]-paddingright-paddingleft
 arenaheight = fullscreen[1]-paddingbelow-paddingabove
 
-#rightspace parameters
+# score area space parameters
 
 rsleft = paddingleft + arenawidth + 45
 rsright = fullscreen[0]
@@ -132,9 +132,9 @@ def createpointsystem():
     scoring_system()
 
     scoreboard = str(score)
-    scoreboard2 = str((scoring_system())) #score for now but the maximum!!!!!!!!
+    scoreboard2 = str((scoring_system()))
 
-
+# the score and its block
 
     scores('MYSCORE',rstop)
     scoreblocks((rstop + 50 + gap),scoreboard)
@@ -155,7 +155,7 @@ pygame.display.flip()
 # parameters for mousey to stay in 
 
 parameters = {
-    'horizontal':((paddingleft + borderwidth),(paddingleft + borderwidth + arenawidth)), 
+    'horizontal':((paddingleft  + borderwidth),(paddingleft + borderwidth + arenawidth)), 
     'vertical':((paddingabove+borderwidth),(paddingabove + borderwidth + arenaheight))
     
 }
@@ -164,6 +164,8 @@ cheeseparameters = {
     'horizontal':((paddingleft + borderwidth + cheese.get_width() + 5),(paddingleft + borderwidth + arenawidth - cheese.get_width() - 5)), 
     'vertical':((paddingabove + borderwidth + cheese.get_height() + 5),(paddingabove + borderwidth + arenaheight - cheese.get_height() - 5))
     }
+
+# down for now
 
 def startmenu():
     pygame.Surface.fill(displaysurface,"white")
@@ -183,14 +185,13 @@ def main():
 
     # music
     pygame.mixer.music.load("assets/A Desktop Homepage Theme.mp3")
-    pygame.mixer.music.play()
+    pygame.mixer.music.play(loops=-1)
     pygame.mixer.music.set_volume(0.07)
     bing = pygame.mixer.Sound("assets/BING.mp3")
     wrong = pygame.mixer.Sound("assets/wrong.mp3")
 
     running = True
     while running:
-
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -244,7 +245,6 @@ def main():
 
         pygame.display.flip()
 
-
         #Mouse eats cheese
         #cheese changes position
         
@@ -276,11 +276,6 @@ def main():
             """cheese moves to a new random location"""
 
             pygame.time.delay(80)
-            # displaysurface.fill(pygame.Color('#90D5FF'))
-            
-            # createarena()
-            # createpointsystem()
-
             pygame.display.flip()
 
             global a,b
@@ -313,7 +308,7 @@ def main():
     
         if mousecatcollision():
             wrong.play()
-            displaysurface.blit(gameover,(fullscreen))
+            displaysurface.blit(gameover,(0,-20))
             pygame.display.flip()
             pygame.time.delay(1000)
             running = False
@@ -322,5 +317,5 @@ def main():
 
 if __name__ == "__main__":
 
-    startmenu()
+    # startmenu()
     main()
