@@ -1,6 +1,8 @@
 import pygame
 import random
 import sys
+import os 
+
 
 pygame.init()
 pygame.mixer.init()
@@ -25,18 +27,23 @@ def fetchimage(imagename,size):
 
 #what is mousey doing
 
-mouseup = fetchimage('assets/Mouseup.png',0.25)
-mousedown = fetchimage('assets/Mousedown.png',0.25)
-mouseleft = fetchimage('assets/Mouseleft.png',0.25)
-mouseright = fetchimage('assets/Mouseright.png',0.25)
-mousedead = fetchimage('assets/Mousedead.png',0.25) 
-mousestop = fetchimage('assets/Mousestop.png',0.25)
-cheese = fetchimage('assets/peanutbutter.png',0.35)
-instruction = fetchimage('assets/feedthemouse.png',0.75)
-thecat = fetchimage('assets/thecat.png',0.15)
-gameover = fetchimage('assets/gameover.png',0.72)
+if getattr(sys,'frozen',False):
+    path = sys._MEIPASS
+else:
+    path = os.path.dirname(os.path.abspath(__file__))
 
-Icon = fetchimage('assets/Mousestop.png',1)
+mouseup = fetchimage(os.path.join(path,'assets','Mouseup.png'),0.25)
+mousedown = fetchimage(os.path.join(path,'assets','Mousedown.png'),0.25)
+mouseleft = fetchimage(os.path.join(path,'assets','Mouseleft.png'),0.25)
+mouseright = fetchimage(os.path.join(path,'assets','Mouseright.png'),0.25)
+mousedead = fetchimage(os.path.join(path,'assets','Mousedead.png'),0.25) 
+mousestop = fetchimage(os.path.join(path,'assets','Mousestop.png'),0.25)
+cheese = fetchimage(os.path.join(path,'assets','peanutbutter.png'),0.35)
+instruction = fetchimage(os.path.join(path,'assets','feedthemouse.png'),0.75)
+thecat = fetchimage(os.path.join(path,'assets','thecat.png'),0.15)
+gameover = fetchimage(os.path.join(path,'assets','gameover.png'),0.72)
+
+Icon = fetchimage(os.path.join(path,'assets','Mousestop.png'),1)
 pygame.display.set_icon(Icon)
 
 # white background 
@@ -48,7 +55,7 @@ pygame.display.flip()
 
 # onto the game
 
-pygame.time.delay(1000)
+pygame.time.delay(4000)
 pygame.Surface.fill(displaysurface,"white")
 pygame.display.flip()
 
@@ -114,15 +121,15 @@ def createpointsystem():
         
         global score
 
-        with open("assets/highscore.txt","r",errors="ignore") as file:
+        with open(os.path.join(path,"assets","highscore.txt"),"r",errors="ignore") as file:
             highscore = file.read()
 
         if score > int(highscore)  or highscore == '':
-            with open("assets/highscore.txt","w",errors="ignore") as file:
+            with open(os.path.join(path,"assets","highscore.txt"),"w",errors="ignore") as file:
                 file.write(str(score))
 
         if score > int(highscore)  or highscore == '':
-            with open("assets/highscore.txt","w",errors="ignore") as file:
+            with open(os.path.join(path,"assets","highscore.txt"),"w",errors="ignore") as file:
                 file.write(str(score))
         else:
             pass
@@ -181,14 +188,14 @@ def main():
 
     move_x,move_y = 0,0
     img = mousestop
-    xyspeed = 3
+    xyspeed = 2.7
 
     # music
-    pygame.mixer.music.load("assets/A Desktop Homepage Theme.mp3")
+    pygame.mixer.music.load(os.path.join(path,'assets','A Desktop Homepage Theme.mp3'))
     pygame.mixer.music.play(loops=-1)
     pygame.mixer.music.set_volume(0.07)
-    bing = pygame.mixer.Sound("assets/BING.mp3")
-    wrong = pygame.mixer.Sound("assets/wrong.mp3")
+    bing = pygame.mixer.Sound(os.path.join(path,'assets','BING.mp3'))
+    wrong = pygame.mixer.Sound(os.path.join(path,'assets','wrong.mp3'))
 
     running = True
     while running:
@@ -250,7 +257,7 @@ def main():
         
         def the_cat_follows(x,y,t,v): 
 
-            tvspeed = 0.7
+            tvspeed = 0.5
 
             distance_between_x = x - t
             distance_between_y = y - v
